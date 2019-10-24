@@ -14,7 +14,7 @@ module.exports = {
   setup: (config) => {
     if (!config) {
 
-      throw new Error('Detox applitools configuration is missing! \n Necessary configuration params: detoxConfig, batchId, apiKey, appName, serverUrl');
+      throw new Error('Detox applitools configuration is missing! \n Necessary configuration params: batchId, apiKey, appName, serverUrl, detoxConfig (necessary if using multiple detox configs).');
     }
 
     const {detoxConfig, batchId, apiKey, appName, serverUrl} = config;
@@ -28,11 +28,14 @@ module.exports = {
       return;
     }
 
-    if (!detoxConfig) {
-      throw new Error('Detox cofiguration is missing');
+    let detoxConfiguration = detoxConfig;
+    if (Object.keys(packageJSON.detox.configurations).length === 1) {
+      detoxConfiguration = Object.keys(packageJSON.detox.configurations)[0];
+    } else if (!detoxConfiguration) {
+      console.error('You have multiple detox configurations, detoxConfig option is necessary!');
     }
 
-    const detox = packageJSON.detox.configurations[detoxConfig];
+    const detox = packageJSON.detox.configurations[detoxConfiguration];
     this._eyes = require('./eyes')({batchId, appName, apiKey, serverUrl, hostOS: detox.type, hostApp: detox.name});
 
     this._screenshotPath = execSync('mktemp -t dat -d').toString().trim();

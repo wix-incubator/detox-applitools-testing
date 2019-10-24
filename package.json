@@ -1,0 +1,25 @@
+{
+  "name": "detox-applitools-testing",
+  "version": "1.0.0",
+  "description": "Utility to integrate applitools screenshot testing in your detox tests",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wix-incubator/detox-applitools-testing.git"
+  },
+  "keywords": [
+    "applitools",
+    "detox",
+    "screenshot",
+    "testing"
+  ],
+  "author": "Gytis Vinclovas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wix-incubator/detox-applitools-testing/issues"
+  },
+  "homepage": "https://github.com/wix-incubator/detox-applitools-testing#readme"
+}

@@ -21,5 +21,11 @@
   "bugs": {
     "url": "https://github.com/wix-incubator/detox-applitools-testing/issues"
   },
-  "homepage": "https://github.com/wix-incubator/detox-applitools-testing#readme"
+  "homepage": "https://github.com/wix-incubator/detox-applitools-testing#readme",
+  "dependencies": {
+    "@applitools/eyes-images": "^4.12.20"
+  },
+  "peerDependencies": {
+    "detox": "*"
+  }
 }

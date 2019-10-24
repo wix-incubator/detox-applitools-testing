@@ -32,7 +32,7 @@ module.exports = {
 
     const configurationName = argparse.getArgValue('configuration');
     const detox = packageJSON.detox.configurations[configurationName];
-    this._eyes = require('./eyes')({batchId, appName, apiKey, serverUrl, hostOS: detox.type, hostApp: detox.name});
+    this._eyes = require('./eyes')({batchId, appName, apiKey, serverUrl, hostOS: detox.type, hostApp: detox.name || (typeof detox.device === 'string' ? detox.device : detox.device.name)});
 
     this._screenshotPath = execSync('mktemp -t dat -d').toString().trim();
     this._screenshotUtils = screenshotUtilsFactory(this._screenshotPath);

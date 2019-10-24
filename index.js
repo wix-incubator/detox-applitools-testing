@@ -3,6 +3,7 @@ const {existsSync} = require('fs');
 const path = require('path');
 const screenshotUtilsFactory = require('./screenshots');
 const packageJSON = require(path.resolve(process.cwd(), './package.json'));
+const argparse = require('detox/src/utils/argparse');
 
 module.exports = {
   _testDisabled: false,
@@ -28,14 +29,9 @@ module.exports = {
       return;
     }
 
-    let detoxConfiguration = detoxConfig;
-    if (Object.keys(packageJSON.detox.configurations).length === 1) {
-      detoxConfiguration = Object.keys(packageJSON.detox.configurations)[0];
-    } else if (!detoxConfiguration) {
-      console.error('You have multiple detox configurations, detoxConfig option is necessary!');
-    }
 
-    const detox = packageJSON.detox.configurations[detoxConfiguration];
+    const configurationName = argparse.getArgValue('configuration');
+    const detox = packageJSON.detox.configurations[configurationName];
     this._eyes = require('./eyes')({batchId, appName, apiKey, serverUrl, hostOS: detox.type, hostApp: detox.name});
 
     this._screenshotPath = execSync('mktemp -t dat -d').toString().trim();

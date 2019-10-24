@@ -35,7 +35,6 @@ before(async () => {
     appName: 'Your app Name',
     serverUrl: 'applitools server url', //Optional, leave empty if not using custom server
     batchId: 'Unique batch number, can simply be uuid.v4()',
-    detoxConfig: 'ios-simulator.debug'
   });
 });
 

@@ -53,11 +53,11 @@ To use screenshot testing inside your tests:
 ```javascript
 import {testScreenshot} from 'detox-applitools-testing';
 
-describe('...', () => {
+describe('...', await () => {
 
   it('...', () => {
     ...
-    testScreenshot('Unique test case');
+    async testScreenshot('Unique test case');
   });
 
 });

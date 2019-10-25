@@ -15,10 +15,10 @@ module.exports = {
   setup: (config) => {
     if (!config) {
 
-      throw new Error('Detox applitools configuration is missing! \n Necessary configuration params: batchId, apiKey, appName, serverUrl, detoxConfig (necessary if using multiple detox configs).');
+      throw new Error('Detox applitools configuration is missing! \n Necessary configuration params: batchId, apiKey, appName, serverUrl');
     }
 
-    const {detoxConfig, batchId, apiKey, appName, serverUrl} = config;
+    const {batchId, apiKey, appName, serverUrl} = config;
 
     this._config = config;
 

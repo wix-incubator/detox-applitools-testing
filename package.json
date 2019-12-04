@@ -1,6 +1,6 @@
 {
   "name": "detox-applitools-testing",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Utility to integrate applitools screenshot testing in your detox tests",
   "main": "index.js",
   "scripts": {

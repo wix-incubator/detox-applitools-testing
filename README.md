@@ -1,6 +1,6 @@
 <h1 align="center">Detox Applitools Testing</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.3-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-1.0.5-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/wix/detox-applitools-testing#readme">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" target="_blank" />
   </a>
@@ -26,7 +26,7 @@ npm install detox-applitools-testing
 Inside your Detox entry (usually `index.js` file in `e2e/index.js`) add following lines:
 
 ```javascript
-import {setup, cleanup} from 'detox-applitools-testing';
+import {setup} from 'detox-applitools-testing';
 
 before(async () => {
   ...
@@ -36,12 +36,6 @@ before(async () => {
     serverUrl: 'applitools server url', //Optional, leave empty if not using custom server
     batchId: 'Unique batch number, can simply be uuid.v4()',
   });
-});
-
-
-after(async () => {
-  ...
-  cleanup();
 });
 
 ```
@@ -64,7 +58,7 @@ describe('...', await () => {
 ```
 
 ## testScreenshot
-By default testScreenshot cuts off 44 pixels from the screenshot to hide the clock. You can disable it by using: `testScreenshot('TEST_ID', {ignoredTopHeight: 0})`
+By default testScreenshot cuts off top bar of the screenshot to hide the clock. You can disable it by using: `testScreenshot('TEST_ID', {ignoredTopHeight: 0})`
 
 ## 🤝 Contributing
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/wix/detox-applitools-testing/issues).

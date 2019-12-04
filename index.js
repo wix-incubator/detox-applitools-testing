@@ -51,7 +51,7 @@ module.exports = {
 
     await this._eyes.checkRegion(screenshotPath, {
       left: 0,
-      top: options.ignoredTopHeight === undefined ? this._statusBarHeight : options.ignoredTopHeight,
+      top: parseInt(options.ignoredTopHeight === undefined ? this._statusBarHeight : options.ignoredTopHeight),
       width: 5000,
       height: 5000,
     }, id);

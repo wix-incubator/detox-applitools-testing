@@ -40,7 +40,7 @@ before(async () => {
 
 ```
 
-If you are using Jest, add this option to your Jest config to have faster global lookups (results in faster screenshot comparisons). [Read more](https://jestjs.io/docs/en/configuration#extraglobals-arraystring):
+If you are using Jest, add this option to your Jest config to have faster global lookups (results in faster screenshot comparisons). [Read more](https://jestjs.io/docs/en/configuration#extraglobals-arraystring)
 ```javascript
 "extraGlobals": ["Math"],
 ```

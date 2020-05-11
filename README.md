@@ -31,8 +31,10 @@ before(async () => {
   setup({
     apiKey: 'EYES_API_KEY', //Your key from applitools,
     appName: 'Your app Name',
-    serverUrl: 'applitools server url', //Optional, leave empty if not using custom server
     batchId: 'Unique batch number, can simply be uuid.v4()',
+    serverUrl: 'applitools server url', //Optional, leave empty if not using custom server
+    branchName: 'YourBranchName', //Optional, run tests in specific branch. Learn more: https://help.applitools.com/hc/en-us/articles/360007528631-Branches
+    parentBranchName: 'YourParentBranchName', //Optional, compare tests against a specific baseline in a different branch. Learn more: https://help.applitools.com/hc/en-us/articles/360007528631-Branches 
   });
 });
 

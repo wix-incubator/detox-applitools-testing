@@ -3,7 +3,7 @@ const {ConsoleLogHandler} = require('@applitools/eyes-common');
 
 let eyes = null;
 
-module.exports = ({serverUrl, apiKey, batchId, appName, hostOS, hostApp}) => {
+module.exports = ({serverUrl, apiKey, batchId, appName, hostOS, hostApp, branchName, parentBranchName}) => {
   if (!eyes) {
     eyes = new Eyes();
 
@@ -13,6 +13,14 @@ module.exports = ({serverUrl, apiKey, batchId, appName, hostOS, hostApp}) => {
 
     if (serverUrl) {
       eyes.setServerUrl(serverUrl);
+    }
+
+    if (branchName) {
+      eyes.setBranchName(branchName);
+    }
+
+    if (parentBranchName) {
+      eyes.setParentBranchName(parentBranchName);
     }
 
     eyes.setBatch(appName, batchId);

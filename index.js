@@ -19,7 +19,7 @@ module.exports = {
       throw new Error('Detox applitools configuration is missing! \n Necessary configuration params: batchId, apiKey, appName, serverUrl');
     }
 
-    const {batchId, apiKey, appName, serverUrl} = config;
+    const {batchId, apiKey, appName, serverUrl, branchName, parentBranchName} = config;
 
     this._config = config;
 
@@ -37,7 +37,7 @@ module.exports = {
     const deviceInfo = Object.entries(statusBarHeights).find(([_height, devices]) => devices.indexOf(this._deviceName) !== -1);
 
     this._statusBarHeight = deviceInfo ? deviceInfo[0] : 44;
-    this._eyes = require('./eyes')({batchId, appName, apiKey, serverUrl, hostOS: detox.type, hostApp: this._deviceName});
+    this._eyes = require('./eyes')({batchId, appName, apiKey, serverUrl, branchName, parentBranchName, hostOS: detox.type, hostApp: this._deviceName});
   },
 
   testScreenshot: async (id, options = {}) => {

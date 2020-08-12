@@ -45,7 +45,7 @@ module.exports = {
       return;
     }
 
-    const screenshotPath = await device.takeScreenshot(id);
+    const screenshotPath = options.screenshotPath || await device.takeScreenshot(id);
 
     await this._eyes.open(this._config.appName || 'APP_NAME_NOT_SET', id);
 

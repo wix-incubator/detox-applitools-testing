@@ -56,13 +56,20 @@ describe('...', await () => {
 
   it('...', () => {
     ...
-    async testScreenshot('Unique test case');
+    await testScreenshot('Unique test case');
   });
 
 });
 ```
 
 ## testScreenshot
+```javascript
+await testScreenshot('NAME_OF_TEST', {
+  ignoredTopHeight : 44, // Optional, pixels from top to ignore
+  screenshotPath: 'YOUR_PATH', // Optional, by default screenshot is taken by Detox
+});
+```
+
 By default testScreenshot cuts off top bar of the screenshot to hide the clock. You can disable it by using: `testScreenshot('TEST_ID', {ignoredTopHeight: 0})`
 
 ## 🤝 Contributing

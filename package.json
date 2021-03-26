@@ -1,10 +1,18 @@
 {
   "name": "detox-applitools-testing",
-  "version": "1.1.2",
+  "version": "2.0.0-alpha.1",
   "description": "Utility to integrate applitools screenshot testing in your detox tests",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "pretest": "npm run build && npm run lint",
+    "test": ":",
+    "lint": "eslint .",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -28,5 +36,25 @@
   },
   "peerDependencies": {
     "detox": "*"
+  },
+  "devDependencies": {
+    "@types/detox": "^17.14.0",
+    "@types/node": "^14.14.35",
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.22.0",
+    "husky": "^5.2.0",
+    "lint-staged": "^10.5.4",
+    "prettier": "^2.2.1",
+    "typescript": "^4.2.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts}": "eslint --cache --fix",
+    "*.{js,css,md,ts}": "prettier --write"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "detox-applitools-testing",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "description": "Utility to integrate applitools screenshot testing in your detox tests",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -38,7 +38,6 @@
     "detox": "*"
   },
   "devDependencies": {
-    "@types/detox": "^17.14.0",
     "@types/node": "^14.14.35",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",

@@ -1,5 +1,4 @@
 import {Eyes} from '@applitools/eyes-images';
-import {TestResults} from '@applitools/eyes-sdk-core';
 import {ScreenshotOptions} from './types';
 
 export class DetoxEyes extends Eyes {
@@ -20,14 +19,14 @@ export class DetoxEyes extends Eyes {
     return this.checkRegion(path, region, id);
   };
 
-  getUpdatedTestResult = async (testResult: TestResults, screenshotPath: string) => {
+  getUpdatedTestResult = async (testResult: any, screenshotPath: string) => {
     // Applitools does not support obtaining updated test status after test finishes running :(
     // Current implementation is based on retesting same screenshot again and then deleting the new result
 
     await this.open(this.getAppName(), testResult.getName());
     await this.testScreenshot(testResult.getName(), screenshotPath);
 
-    const newResult: TestResults = await this.close(false);
+    const newResult = await this.close(false);
     await newResult.deleteSession();
 
     return newResult;

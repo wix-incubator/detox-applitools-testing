@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {ConsoleLogHandler} from '@applitools/eyes-common';
-import {TestResults} from '@applitools/eyes-sdk-core';
 import {DetoxEyes} from './detox-eyes';
 import {Config, ScreenshotOptions, TestReporter} from './types';
 import {getDeviceName, getDeviceType, getStatusBarHeight, takeScreenshot} from './detox';
@@ -12,7 +11,7 @@ const DEFAULT_APPROVE_CHECK_INTERVAL = ONE_MINUTE;
 
 export interface TestDetails {
   screenshotPath: string;
-  result: TestResults;
+  result: any;
   message?: string;
   options?: ScreenshotOptions;
 }
@@ -59,7 +58,7 @@ export class DetoxApplitoolsTesting {
 
     let message = '';
 
-    const result: TestResults = await eyes.close(false);
+    const result = await eyes.close(false);
     const testFailed = !result.isPassed();
     if (testFailed) {
       message = `--- Failed test ended. See details at ${result.getAppUrls().getBatch()}`;

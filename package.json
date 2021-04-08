@@ -8,11 +8,12 @@
     "/dist"
   ],
   "scripts": {
+    "clean": "rm -rf dist",
     "build": "tsc",
     "pretest": "npm run build && npm run lint",
     "test": ":",
     "lint": "eslint .",
-    "prepublish": "npm run build"
+    "prepublish": "npm run clean && npm run build"
   },
   "repository": {
     "type": "git",

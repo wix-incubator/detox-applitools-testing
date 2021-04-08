@@ -16,12 +16,19 @@ export interface ScreenshotOptions {
   ignoredTopHeight?: number;
 }
 
+export enum TestStatus {
+  PASSED = 'passed',
+  FAILED = 'failed',
+  SKIPPED = 'skipped',
+}
+
 export interface TestStartDetails {
   name: string;
 }
 
 export interface TestEndDetails extends TestStartDetails {
-  passed: boolean;
+  status: TestStatus;
+  duration: number;
   batchUrl?: string;
   message?: string;
 }
@@ -30,6 +37,6 @@ export interface TestReporter {
   reportTestStart?(details: TestStartDetails);
   reportTestDone?(details: TestEndDetails);
   reportAllTestsStart?();
-  reportAllTestsDone?(results: TestEndDetails[]);
+  reportAllTestsDone?();
   reportMismatchTests?(results: TestEndDetails[]);
 }

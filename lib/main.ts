@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {ConsoleLogHandler} from '@applitools/eyes-common';
 import {DetoxEyes} from './detox-eyes';
-import {Config, ScreenshotOptions, TestReporter} from './types';
+import {Config, ScreenshotOptions, TestEndDetails, TestReporter, TestStartDetails, TestStatus} from './types';
 import {getDeviceName, getDeviceType, getStatusBarHeight, takeScreenshot} from './detox';
 
 const ONE_MINUTE = 60 * 1000;
@@ -38,23 +38,23 @@ export class DetoxApplitoolsTesting {
     this.reporter?.reportAllTestsStart?.();
   };
 
-  testScreenshot = async (id: string, options?: ScreenshotOptions) => {
+  testScreenshot = async (name: string, options?: ScreenshotOptions) => {
     const eyes = this.buildEyes();
     eyes.setScreenshotOptions(options);
 
+    this.onTestStart({name});
+
     if (eyes.getIsDisabled()) {
+      this.onTestDone({name, status: TestStatus.SKIPPED, duration: 0});
       return;
     }
 
     const {appName, reportFailuresAfterAll} = this.config;
-    if (!reportFailuresAfterAll) {
-      this.onTestStart(id);
-    }
 
-    await eyes.open(appName || 'APP_NAME_NOT_SET', id);
+    await eyes.open(appName || 'APP_NAME_NOT_SET', name);
 
-    const screenshotPath = options.screenshotPath || (await takeScreenshot(id));
-    await eyes.testScreenshot(id, screenshotPath);
+    let screenshotPath = options.screenshotPath || (await takeScreenshot(name));
+    await eyes.testScreenshot(name, screenshotPath);
 
     let message = '';
 
@@ -65,14 +65,15 @@ export class DetoxApplitoolsTesting {
     }
 
     if (reportFailuresAfterAll) {
-      const imagePath = path.resolve(process.cwd(), './artifacts/', `${id}.png`);
+      const imagePath = path.resolve(process.cwd(), './artifacts/', `${name}.png`);
       fs.copyFileSync(screenshotPath, imagePath);
-      this.finishedTests.push({screenshotPath: imagePath, result, options, message});
-    } else {
-      this.onTestDone(id, result.isPassed(), message);
-      if (testFailed) {
-        throw new Error(message);
-      }
+      screenshotPath = imagePath;
+    }
+
+    this.finishedTests.push({screenshotPath, result, options, message});
+
+    if (!reportFailuresAfterAll && testFailed) {
+      throw new Error(message);
     }
   };
 
@@ -146,22 +147,27 @@ export class DetoxApplitoolsTesting {
     clearInterval(updateInterval);
   };
 
-  private onTestStart = (name: string) => {
-    this.reporter?.reportTestStart?.({name});
+  private onTestStart = (details: TestStartDetails) => {
+    this.reporter?.reportTestStart?.(details);
   };
 
-  private onTestDone = (name: string, passed: boolean, message?: string) => {
-    this.reporter?.reportTestDone?.({name, passed, message});
+  private onTestDone = (details: TestEndDetails) => {
+    this.reporter?.reportTestDone?.(details);
   };
 
   private onAllTestsDone = () => {
-    if (this.reporter?.reportAllTestsDone) {
-      const details = this.finishedTests.map(({result: testResult, message}) => ({
-        name: testResult.getName(),
-        passed: testResult.isPassed(),
+    this.finishedTests
+      .map(({result, message}) => ({
+        name: result.getName(),
+        status: result.isPassed() ? TestStatus.PASSED : TestStatus.FAILED,
+        duration: result.getDuration(),
+        batchUrl: result.getAppUrls().getBatch(),
         message,
-      }));
-      this.reporter.reportAllTestsDone(details);
+      }))
+      .map(this.onTestDone);
+
+    if (this.reporter?.reportAllTestsDone) {
+      this.reporter.reportAllTestsDone();
     }
 
     if (this.config.reportFailuresAfterAll) {
@@ -174,8 +180,8 @@ export class DetoxApplitoolsTesting {
 
     if (failedTests.length) {
       let errorMessage = 'The following tests have failed:\n';
-      failedTests.forEach(({result: testResult, message}) => {
-        errorMessage += `${testResult.getName()} - ${message}`;
+      failedTests.forEach(({result, message}) => {
+        errorMessage += `${result.getName()} - ${message}`;
       });
 
       throw new Error(errorMessage);
@@ -184,10 +190,12 @@ export class DetoxApplitoolsTesting {
 
   private reportMismatches = () => {
     if (this.reporter?.reportMismatchTests) {
-      const mismatchDetails = this.getUnresolvedTests().map(({result: testResult}) => ({
+      const mismatchDetails = this.getUnresolvedTests().map(({result: testResult, message}) => ({
         name: testResult.getName(),
         batchUrl: testResult.getAppUrls().getBatch(),
-        passed: false,
+        duration: testResult.getDuration(),
+        status: TestStatus.FAILED,
+        message,
       }));
       this.reporter.reportMismatchTests(mismatchDetails);
     }

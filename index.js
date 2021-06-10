@@ -26,11 +26,11 @@ module.exports = {
       return;
     }
 
-    this._deviceName = device.name;
-    const deviceInfo = Object.entries(statusBarHeights).find(([_height, devices]) => devices.indexOf(this._deviceName) !== -1);
+    const deviceName = extractDeviceName(device.name);
+    const deviceInfo = Object.entries(statusBarHeights).find(([_height, devices]) => devices.indexOf(deviceName) !== -1);
 
     this._statusBarHeight = deviceInfo ? deviceInfo[0] : 44;
-    this._eyes = require('./eyes')({batchId, appName, apiKey, serverUrl, branchName, parentBranchName, hostOS: device.getPlatform(), hostApp: this._deviceName});
+    this._eyes = require('./eyes')({batchId, appName, apiKey, serverUrl, branchName, parentBranchName, hostOS: device.getPlatform(), hostApp: deviceName});
   },
 
   testScreenshot: async (id, options = {}) => {
@@ -52,3 +52,15 @@ module.exports = {
     await this._eyes.close();
   }
 };
+
+const deviceNameRegExp = new RegExp(/\((.*?)\)/);
+
+const extractDeviceName = (fullDeviceName) => {
+  const matches = fullDeviceName.match(deviceNameRegExp);
+
+  if (matches.length === 2) {
+    return matches[1];
+  }
+
+  return 'unknown';
+}

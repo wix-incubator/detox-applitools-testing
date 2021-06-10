@@ -58,9 +58,10 @@ const deviceNameRegExp = new RegExp(/\((.*?)\)/);
 const extractDeviceName = (fullDeviceName) => {
   const matches = fullDeviceName.match(deviceNameRegExp);
 
-  if (matches.length === 2) {
+  if (matches && matches.length === 2) {
     return matches[1];
   }
 
+  console.error('Could not parse device name', fullDeviceName);
   return 'unknown';
 }

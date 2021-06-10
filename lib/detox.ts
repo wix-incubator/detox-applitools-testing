@@ -6,7 +6,7 @@ export const getDeviceType = (): string => {
 };
 
 export const getDeviceName = (): string => {
-  return device.name;
+  return extractDeviceName(device.name);
 };
 
 export const getStatusBarHeight = (): number => {
@@ -16,5 +16,17 @@ export const getStatusBarHeight = (): number => {
 };
 
 export const takeScreenshot = (name: string): Promise<string> => {
-  return (device.takeScreenshot(name) as unknown) as Promise<string>;
+  return device.takeScreenshot(name) as unknown as Promise<string>;
+};
+
+const DEVICE_NAME_REGEXP = new RegExp(/\((.*?)\)/);
+
+const extractDeviceName = (fullDeviceName): string => {
+  const matches = fullDeviceName.match(DEVICE_NAME_REGEXP);
+
+  if (matches.length === 2) {
+    return matches[1];
+  }
+
+  return 'unknown';
 };

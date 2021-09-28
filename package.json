@@ -5,13 +5,15 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "/dist"
+    "/dist",
+    "!*.test.js",
+    "!*.test.d.ts"
   ],
   "scripts": {
     "clean": "rm -rf dist",
     "build": "tsc",
     "pretest": "npm run build && npm run lint",
-    "test": ":",
+    "test": "jest",
     "lint": "eslint .",
     "prepublish": "npm run clean && npm run build"
   },
@@ -39,11 +41,13 @@
     "detox": "*"
   },
   "devDependencies": {
+    "@types/jest": "^27.0.2",
     "@types/node": "^14.14.35",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
     "eslint": "^7.22.0",
     "husky": "^5.2.0",
+    "jest": "^27.2.2",
     "lint-staged": "^10.5.4",
     "prettier": "^2.2.1",
     "typescript": "^4.2.3"
@@ -56,5 +60,14 @@
   "lint-staged": {
     "*.{js,ts}": "eslint --cache --fix",
     "*.{js,css,md,ts}": "prettier --write"
+  },
+  "jest": {
+    "resetMocks": true,
+    "testMatch": [
+      "<rootDir>/lib/**/*.test.ts"
+    ],
+    "transform": {
+      "\\.ts$": "ts-jest"
+    }
   }
 }

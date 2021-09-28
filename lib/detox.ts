@@ -1,5 +1,6 @@
 import {device} from 'detox';
 import {statusBarHeights, defaultHeight} from './status-bar';
+import extractDeviceName from './utils/extractDeviceName';
 
 export const getDeviceType = (): string => {
   return device.getPlatform();
@@ -17,17 +18,4 @@ export const getStatusBarHeight = (): number => {
 
 export const takeScreenshot = (name: string): Promise<string> => {
   return device.takeScreenshot(name) as unknown as Promise<string>;
-};
-
-const DEVICE_NAME_REGEXP = new RegExp(/\((.*?)\)/);
-
-const extractDeviceName = (fullDeviceName): string => {
-  const matches = fullDeviceName.match(DEVICE_NAME_REGEXP);
-
-  if (matches && matches.length === 2) {
-    return matches[1];
-  }
-
-  console.error('Could not parse device name', fullDeviceName);
-  return 'unknown';
 };

@@ -4,7 +4,7 @@
   "description": "Utility to integrate applitools screenshot testing in your detox tests",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -28,5 +28,14 @@
   },
   "peerDependencies": {
     "detox": "*"
+  },
+  "devDependencies": {
+    "jest": "^27.2.2"
+  },
+  "jest": {
+    "resetMocks": true,
+    "testMatch": [
+      "<rootDir>/lib/**/*.test.js"
+    ]
   }
 }

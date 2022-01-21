@@ -6,6 +6,7 @@ export interface Config {
   branchName?: string;
   parentBranchName?: string;
   reportFailuresAfterAll?: boolean;
+  parallelVerifications?: number;
   waitAfterMismatch?: boolean;
   approveTimeout?: number;
   approveCheckInterval?: number;

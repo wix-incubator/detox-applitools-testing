@@ -16,11 +16,17 @@ export interface TestDetails {
   options?: ScreenshotOptions;
 }
 
+interface Worker {
+  count: number;
+  queue: Promise<void>;
+}
+
 export class DetoxApplitoolsTesting {
   private deviceName: string;
   private deviceType: string;
   private statusBarHeight = 0;
   private finishedTests: TestDetails[] = [];
+  private workers: Worker[] = [];
 
   constructor(private config: Config, private reporter?: TestReporter) {
     if (!config) {
@@ -32,6 +38,10 @@ export class DetoxApplitoolsTesting {
     this.deviceType = getDeviceType();
     this.deviceName = getDeviceName();
     this.statusBarHeight = getStatusBarHeight();
+    this.workers =
+      config.reportFailuresAfterAll && config.parallelVerifications
+        ? Array.from(Array(config.parallelVerifications).keys(), () => ({count: 0, queue: Promise.resolve()}))
+        : [];
   }
 
   setup = () => {
@@ -51,33 +61,48 @@ export class DetoxApplitoolsTesting {
 
     const {appName, reportFailuresAfterAll} = this.config;
 
-    await eyes.open(appName || 'APP_NAME_NOT_SET', name);
-
     let screenshotPath = options.screenshotPath || (await takeScreenshot(name));
-    await eyes.testScreenshot(name, screenshotPath);
 
-    let message = '';
+    const worker = this.workers.reduce((w, i) => (!w ? i : i.count < w.count ? i : w), undefined);
 
-    const result = await eyes.close(false);
-    const testFailed = !result.isPassed();
-    if (testFailed) {
-      message = `--- Failed test ended. See details at ${result.getAppUrls().getBatch()}`;
-    }
+    const verify = async () => {
+      await eyes.open(appName || 'APP_NAME_NOT_SET', name);
 
-    if (reportFailuresAfterAll) {
-      const imagePath = path.resolve(process.cwd(), './artifacts/', `${name}.png`);
-      fs.copyFileSync(screenshotPath, imagePath);
-      screenshotPath = imagePath;
-    }
+      await eyes.testScreenshot(name, screenshotPath);
 
-    this.finishedTests.push({screenshotPath, result, options, message});
+      let message = '';
 
-    if (!reportFailuresAfterAll && testFailed) {
-      throw new Error(message);
+      const result = await eyes.close(false);
+      const testFailed = !result.isPassed();
+      if (testFailed) {
+        message = `--- Failed test ended. See details at ${result.getAppUrls().getBatch()}`;
+      }
+
+      if (reportFailuresAfterAll) {
+        const imagePath = path.resolve(process.cwd(), './artifacts/', `${name}.png`);
+        fs.copyFileSync(screenshotPath, imagePath);
+        screenshotPath = imagePath;
+      }
+
+      this.finishedTests.push({screenshotPath, result, options, message});
+
+      if (!reportFailuresAfterAll && testFailed) {
+        throw new Error(message);
+      }
+    };
+
+    if (worker) {
+      worker.count += 1;
+      worker.queue = worker.queue.then(verify);
+    } else {
+      await verify();
     }
   };
 
   close = async () => {
+    if (this.workers.length > 0) {
+      await Promise.all(this.workers.map((it) => it.queue));
+    }
     const {waitAfterMismatch} = this.config;
     const hasMismatches = !this.allTestsPassed();
 

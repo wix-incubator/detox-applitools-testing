@@ -63,7 +63,7 @@ export class DetoxApplitoolsTesting {
 
     let screenshotPath = options.screenshotPath || (await takeScreenshot(name));
 
-    const worker = this.workers.reduce((w, i) => (!w ? i : i.count < w.count ? i : w), undefined);
+    const worker = this.selectLeastBusyWorker();
 
     const verify = async () => {
       await eyes.open(appName || 'APP_NAME_NOT_SET', name);
@@ -199,6 +199,13 @@ export class DetoxApplitoolsTesting {
       this.throwFailedTestsError();
     }
   };
+
+  private selectLeastBusyWorker(): Worker | undefined {
+    return this.workers.reduce(
+      (selected, candidate) => (!selected || candidate.count < selected.count ? candidate : selected),
+      undefined,
+    );
+  }
 
   private throwFailedTestsError = () => {
     const failedTests = this.getUnresolvedTests();

@@ -35,7 +35,7 @@
   "homepage": "https://github.com/wix-incubator/detox-applitools-testing#readme",
   "dependencies": {
     "@applitools/eyes-common": "^3.24.0",
-    "@applitools/eyes-images": "^4.12.20"
+    "@applitools/eyes-images": "4.21.0"
   },
   "peerDependencies": {
     "detox": "*"
